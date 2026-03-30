@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.lumi.habd.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "SuffocationMixin"
+  ],
+  "injectors": {
+      "defaultRequire": 1
+  },
+  "overwrites": {
+      "requireAnnotations": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "parent": "have-a-bad-day:have_a_bad_day",
+  "criteria": {
+    "blink": {
+      "trigger": "have-a-bad-day:blink"
+    }
+  },
+  "display": {
+    "description": "Blink for the first time",
+    "icon": {
+      "id": "minecraft:ender_pearl"
+    },
+    "title": "You missed it!"
+  },
+  "requirements": [
+    [
+      "blink"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

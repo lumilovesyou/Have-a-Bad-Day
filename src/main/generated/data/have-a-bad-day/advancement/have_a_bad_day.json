@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "blink": {
+      "trigger": "have-a-bad-day:blink"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:block/obsidian",
+    "description": "It's not that bad... right?",
+    "icon": {
+      "id": "minecraft:wither_rose"
+    },
+    "title": "Have a Bad Day"
+  },
+  "requirements": [
+    [
+      "blink"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

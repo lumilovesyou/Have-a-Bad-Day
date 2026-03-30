@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "have-a-bad-day",
+  "version": "${version}",
+  "name": "Have a Bad Day",
+  "description": "Makes the game all around worse to play",
+  "authors": [
+    "LumiLovesYou"
+  ],
+  "contact": {
+    "homepage": "https://fillme.in/ ~~~~~~~~~~~~~~",
+    "sources": "https://github.com/lumilovesyou/Have-a-Bad-Day"
+  },
+  "license": "ISC",
+  "icon": "assets/have-a-bad-day/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.lumi.habd.HaveABadDay"
+    ],
+    "client": [
+      "com.lumi.habd.HaveABadDayClient"
+    ],
+    "fabric-datagen": [
+      "com.lumi.habd.datagen.DataGenerator"
+    ]
+  },
+  "mixins": [
+    "have-a-bad-day.mixins.json",
+    {
+      "config": "have-a-bad-day.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.5",
+    "minecraft": "~26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
