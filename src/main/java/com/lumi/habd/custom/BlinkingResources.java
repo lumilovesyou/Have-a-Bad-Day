@@ -13,7 +13,7 @@ import net.minecraft.world.damagesource.DamageType;
 
 import static com.lumi.habd.HaveABadDay.MODID;
 
-public class Blinking {
+public class BlinkingResources {
     //Not blinking damage source
     public static final ResourceKey<DamageType> EyesDriedDamageSource = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(MODID, "eyes_dried"));
 

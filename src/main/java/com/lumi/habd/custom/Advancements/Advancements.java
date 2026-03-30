@@ -1,6 +1,7 @@
 package com.lumi.habd.custom.Advancements;
 
 import com.lumi.habd.custom.Advancements.Criterion.BlinkAdvancementCriteria;
+import com.lumi.habd.custom.Advancements.Criterion.BreatheAdvancementCriteria;
 import com.lumi.habd.custom.Advancements.Criterion.ModCriteria;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
@@ -55,5 +56,21 @@ public class Advancements extends FabricAdvancementProvider {
             .parent(PARENT)
             .addCriterion("blink", ModCriteria.BLINK.createCriterion(new BlinkAdvancementCriteria.Conditions(Optional.empty())))
             .save(consumer, String.format("%s:blink", MODID));
+
+        //Breathing advancement
+        AdvancementHolder BREATH = Advancement.Builder.advancement()
+            .display(
+                Items.WIND_CHARGE,
+                Component.literal("Feel relaxed?"),
+                Component.literal("Breathe for the first time"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .parent(PARENT)
+            .addCriterion("breathe", ModCriteria.BREATHE.createCriterion(new BreatheAdvancementCriteria.Conditions(Optional.empty())))
+            .save(consumer, String.format("%s:breathe", MODID));
     }
 }

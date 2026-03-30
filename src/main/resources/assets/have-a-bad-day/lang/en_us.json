@@ -1,5 +1,6 @@
 {
   "key.category.have-a-bad-day.keybinds": "Have a Bad Day",
-  "key.have-a-bad-day.spook":  "Blink",
+  "key.have-a-bad-day.blink":  "Blink",
+  "key.have-a-bad-day.breath":  "Breath",
   "death.attack.eyes_dried": "%1$s forgot to blink"
 }

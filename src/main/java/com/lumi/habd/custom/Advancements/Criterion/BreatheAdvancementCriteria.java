@@ -7,14 +7,14 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class BlinkAdvancementCriteria extends SimpleCriterionTrigger<BlinkAdvancementCriteria.Conditions> {
+public class BreatheAdvancementCriteria extends SimpleCriterionTrigger<BreatheAdvancementCriteria.Conditions> {
     @Override
     public Codec<Conditions> codec() {
         return Conditions.CODEC;
     }
 
-    public record Conditions(Optional<ContextAwarePredicate> playerPredicate) implements SimpleCriterionTrigger.SimpleInstance {
-        public static Codec<BlinkAdvancementCriteria.Conditions> CODEC = ContextAwarePredicate.CODEC.optionalFieldOf("player")
+    public record Conditions(Optional<ContextAwarePredicate> playerPredicate) implements SimpleInstance {
+        public static Codec<BreatheAdvancementCriteria.Conditions> CODEC = ContextAwarePredicate.CODEC.optionalFieldOf("player")
             .xmap(Conditions::new, Conditions::player).codec();
 
         @Override

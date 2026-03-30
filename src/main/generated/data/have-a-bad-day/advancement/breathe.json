@@ -1,0 +1,21 @@
+{
+  "parent": "have-a-bad-day:have_a_bad_day",
+  "criteria": {
+    "breathe": {
+      "trigger": "have-a-bad-day:breathe"
+    }
+  },
+  "display": {
+    "description": "Breathe for the first time",
+    "icon": {
+      "id": "minecraft:wind_charge"
+    },
+    "title": "Feel relaxed?"
+  },
+  "requirements": [
+    [
+      "breathe"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

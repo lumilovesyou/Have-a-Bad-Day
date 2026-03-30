@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static com.lumi.habd.HaveABadDay.MODID;
 import static com.lumi.habd.HaveABadDay.ticksToBlink;
 import static com.lumi.habd.HaveABadDayClient.blinkCooldown;
-import static com.lumi.habd.custom.Blinking.TICKS;
+import static com.lumi.habd.custom.BlinkingResources.TICKS;
 
 @Mixin(Gui.class)
 public abstract class CameraOverlaysMixin {
