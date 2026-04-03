@@ -1,4 +1,4 @@
-package com.lumi.habd.custom;
+package com.lumi.habd.resources;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;

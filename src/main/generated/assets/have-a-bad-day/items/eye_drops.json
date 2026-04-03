@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "have-a-bad-day:item/eye_drops"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "have-a-bad-day:item/eye_drops_using"
+    },
+    "property": "minecraft:using_item"
+  }
+}

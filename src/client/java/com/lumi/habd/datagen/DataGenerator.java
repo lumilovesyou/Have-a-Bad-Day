@@ -1,6 +1,6 @@
 package com.lumi.habd.datagen;
 
-import com.lumi.habd.custom.Advancements.Advancements;
+import com.lumi.habd.advancements.Advancements;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
@@ -9,5 +9,6 @@ public class DataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         pack.addProvider(Advancements::new);
+        pack.addProvider(ItemModelProvider::new);
     }
 }

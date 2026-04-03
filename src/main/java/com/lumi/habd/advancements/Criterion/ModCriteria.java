@@ -1,4 +1,4 @@
-package com.lumi.habd.custom.Advancements.Criterion;
+package com.lumi.habd.advancements.Criterion;
 
 import net.minecraft.advancements.CriteriaTriggers;
 

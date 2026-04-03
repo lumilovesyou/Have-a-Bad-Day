@@ -11,11 +11,12 @@ import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import static com.lumi.habd.HaveABadDay.MODID;
-import static com.lumi.habd.custom.BlinkingResources.TICKS;
-import static com.lumi.habd.custom.BreathingResources.BreathRefreshPacket;
-import com.lumi.habd.custom.BlinkingResources.BlinkTickPacket;
-import com.lumi.habd.custom.Advancements.Criterion.ModCriteria;
-import com.lumi.habd.custom.BlinkingResources.BlinkRefreshPacket;
+import static com.lumi.habd.HaveABadDay.MAX_BLINK_TICKS;
+import static com.lumi.habd.resources.BlinkingResources.BLINK_TICKS;
+import static com.lumi.habd.resources.BreathingResources.BreathRefreshPacket;
+import com.lumi.habd.resources.BlinkingResources.BlinkTickPacket;
+import com.lumi.habd.advancements.Criterion.ModCriteria;
+import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
 
 public class HaveABadDayClient implements ClientModInitializer {
     public static int blinkCooldown = 0;
@@ -44,7 +45,7 @@ public class HaveABadDayClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(BlinkTickPacket.TYPE, (payload, context) -> {
             context.client().execute(() -> {
                 LocalPlayer player = context.client().player;
-                player.setAttached(TICKS, payload.tick());
+                player.setAttached(BLINK_TICKS, payload.tick());
             });
         });
 
@@ -56,7 +57,7 @@ public class HaveABadDayClient implements ClientModInitializer {
 
             if(BlinkKey.consumeClick() && client.player != null && blinkCooldown == 0) {
                 ClientPlayNetworking.send(new BlinkRefreshPacket());
-                client.player.setAttached(TICKS, 0);
+                client.player.setAttached(BLINK_TICKS, 0);
                 blinkCooldown = 2;
             }
 

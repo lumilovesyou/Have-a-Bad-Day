@@ -9,28 +9,33 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.lumi.habd.custom.BlinkingResources.TICKS;
-import static com.lumi.habd.custom.BreathingResources.BreathRefreshPacket;
-import static com.lumi.habd.custom.BlinkingResources.EyesDriedDamageSource;
-import com.lumi.habd.custom.BlinkingResources.BlinkTickPacket;
-import com.lumi.habd.custom.Advancements.Criterion.ModCriteria;
-import com.lumi.habd.custom.BlinkingResources.BlinkRefreshPacket;
+import static com.lumi.habd.items.ItemRegistrar.*;
+import static com.lumi.habd.resources.BlinkingResources.*;
+import static com.lumi.habd.resources.BreathingResources.BreathRefreshPacket;
+
+import com.lumi.habd.resources.BlinkingResources.BlinkTickPacket;
+import com.lumi.habd.advancements.Criterion.ModCriteria;
+import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
 
 public class HaveABadDay implements ModInitializer {
 	public static final String MODID = "have-a-bad-day";
-    public static int ticksToBlink = 60;
+    public static int MAX_BLINK_TICKS = 60;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+
 
 	@Override
 	public void onInitialize() {
         LOGGER.info("Lumi says \"Have a bad day!\"");
+
+        //Item registration
+        initItems();
 
         ////Packet sending registration
         PayloadTypeRegistry.clientboundPlay().register(
@@ -53,19 +58,21 @@ public class HaveABadDay implements ModInitializer {
         //Remember to add sound effects for blinking + breathing ~~~~~~~~~~~~~~
         ServerPlayNetworking.registerGlobalReceiver(BlinkRefreshPacket.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
-            player.setAttached(TICKS, 0);
+            if (player.getAttachedOrElse(BLINK_TICKS, 0) > 0) {
+                player.setAttached(BLINK_TICKS, 0);
+            }
             ModCriteria.BLINK.trigger(player);
         });
 
         ServerPlayNetworking.registerGlobalReceiver(BreathRefreshPacket.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
-            if (player.isEyeInFluid(FluidTags.WATER) && !player.level().getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).is(Blocks.BUBBLE_COLUMN)) {
-                player.setAirSupply(player.getAirSupply() - 4);
-            } else if ((player.isEyeInFluid(FluidTags.LAVA) || player.isOnFire()) && !player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
-                player.setAirSupply(player.getAirSupply() - 4);
+            if (player.isEyeInFluid(FluidTags.WATER) && !(player.level().getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).is(Blocks.BUBBLE_COLUMN) || player.hasEffect(MobEffects.WATER_BREATHING))) {
+                player.setAirSupply(player.getAirSupply() - (player.getMaxAirSupply() / 5));
+            } else if (((player.isEyeInFluid(FluidTags.LAVA) || player.isOnFire())) && !player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                player.setAirSupply(player.getAirSupply() - (player.getMaxAirSupply() / 5));
                 player.hurt(
-                        player.damageSources().onFire(),
-                        4.0f
+                    player.damageSources().onFire(),
+                    4.0f
                 );
                 //Maybe custom advancement for breathing lava? ~~~~~~~~~~~~~~
             } else {
@@ -80,23 +87,42 @@ public class HaveABadDay implements ModInitializer {
             if (server.getTickCount() % 10 != 0) return;
 
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                int currentTick = player.getAttachedOrElse(TICKS, 0);
-                if (currentTick < ticksToBlink) {
-                    player.setAttached(TICKS, currentTick + 1);
-                    ServerPlayNetworking.send(player, new BlinkTickPacket(currentTick + 1));
+                //Skip if creative
+                if (player.gameMode.isCreative()) continue;
+
+                int currentEyeTicks = player.getAttachedOrElse(BLINK_TICKS, 0);
+                int currentDropperTicks = player.getAttachedOrElse(DROPPER_TICKS, 0);
+
+                if (currentDropperTicks == 0) {
+                    if (currentEyeTicks < MAX_BLINK_TICKS) {
+                        //Makes blinking required more often if you're on fire or in the nether
+                        int newValue = currentEyeTicks + ((player.isOnFire()) ? 3 : ((player.level().dimension() == Level.NETHER) ? 2 : 1));
+                        sendBlinkPacket(player, newValue);
+                    } else {
+                        if (server.getTickCount() % 20 != 0) return;
+                        DamageSource EyesDriedDamage = new DamageSource(
+                            server.registryAccess()
+                                .lookupOrThrow(Registries.DAMAGE_TYPE)
+                                .get(EyesDriedDamageSource.identifier()).get()
+                        );
+                        player.hurt(
+                            EyesDriedDamage,
+                    2.0f
+                        );
+                    }
                 } else {
-                    if (server.getTickCount() % 20 != 0) return;
-                    DamageSource EyesDriedDamage = new DamageSource(
-                        server.registryAccess()
-                            .lookupOrThrow(Registries.DAMAGE_TYPE)
-                            .get(EyesDriedDamageSource.identifier()).get()
-                    );
-                    player.hurt(
-                        EyesDriedDamage,
-                        2.0f
-                    );
+                    currentDropperTicks--;
+                    player.setAttached(DROPPER_TICKS, currentDropperTicks);
+                    sendBlinkPacket(player, 0);
                 }
             }
         });
+    }
+
+    private void sendBlinkPacket(ServerPlayer player, int value) {
+        if (player.getAttachedOrElse(BLINK_TICKS, 0) != value) {
+            player.setAttached(BLINK_TICKS, value);
+            ServerPlayNetworking.send(player, new BlinkTickPacket(value));
+        }
     }
 }

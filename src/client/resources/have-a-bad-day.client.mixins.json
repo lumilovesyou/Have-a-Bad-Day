@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.lumi.habd.mixin.client",
+  "package": "com.lumi.habd.mixins.client",
   "compatibilityLevel": "JAVA_25",
   "client": [
     "gui.CameraOverlaysMixin"

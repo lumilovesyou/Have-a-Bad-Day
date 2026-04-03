@@ -1,8 +1,8 @@
-package com.lumi.habd.custom.Advancements;
+package com.lumi.habd.advancements;
 
-import com.lumi.habd.custom.Advancements.Criterion.BlinkAdvancementCriteria;
-import com.lumi.habd.custom.Advancements.Criterion.BreatheAdvancementCriteria;
-import com.lumi.habd.custom.Advancements.Criterion.ModCriteria;
+import com.lumi.habd.advancements.Criterion.BlinkAdvancementCriteria;
+import com.lumi.habd.advancements.Criterion.BreatheAdvancementCriteria;
+import com.lumi.habd.advancements.Criterion.ModCriteria;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
