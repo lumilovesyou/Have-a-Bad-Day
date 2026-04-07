@@ -24,13 +24,6 @@ public class BlinkingResources {
             () -> 0
     );
 
-    //Ticks of eye drops
-    //Added a new value for this to both simplify the code and prevents problems I experienced when trying to make blink ticks work in a different manner
-    public static final AttachmentType<Integer> DROPPER_TICKS = AttachmentRegistry.<Integer>builder()
-            .initializer(() -> 0)
-            .persistent(Codec.INT)
-            .buildAndRegister(Identifier.fromNamespaceAndPath(MODID, "drops"));
-
     //Time passed without blinking
     public record BlinkTickPacket(int tick) implements CustomPacketPayload {
         public static final CustomPacketPayload.Type<BlinkTickPacket> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(MODID, "blink_tick"));

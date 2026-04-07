@@ -14,7 +14,7 @@ import java.util.function.Function;
 import static com.lumi.habd.HaveABadDay.MODID;
 
 public class ItemRegistrar {
-    public static final Item EYE_DROPS = register("eye_drops", DropperItem::new, new Item.Properties());
+    public static final Item EYE_DROPS = register("eye_drops", DropperItem::new, new Item.Properties().durability(4));
 
     public static <T extends Item> T register(String name, Function<Item.Properties, T> itemFactory, Item.Properties settings) {
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MODID, name));

@@ -1,14 +1,20 @@
 package com.lumi.habd;
 
+import com.lumi.habd.effects.RefreshedEffect;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -24,11 +30,24 @@ import com.lumi.habd.advancements.Criterion.ModCriteria;
 import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
 
 public class HaveABadDay implements ModInitializer {
+    ////To-do:
+    //Make eye drops take any dye (and be coloured appropriately)
+    //Add breathing sound effect
+    //Find a way to generate default resource packs
+        //Add 16x16 pixel art for dropper resource pack
+        //Add female alt breathings sounds resource pack
+            //Add support for female gender mod to add breathing sounds as appropriate
+    //(Maybe) Add support for entity texture features blinking
+    ////
+
 	public static final String MODID = "have-a-bad-day";
     public static int MAX_BLINK_TICKS = 60;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
+    //Effect registration
+    public static final Holder<MobEffect> REFRESHED_EFFECT =
+            Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MODID, "refreshed"), new RefreshedEffect());
 
 	@Override
 	public void onInitialize() {
@@ -88,32 +107,25 @@ public class HaveABadDay implements ModInitializer {
 
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 //Skip if creative
-                if (player.gameMode.isCreative()) continue;
+                if (player.gameMode.isCreative() || player.hasEffect(REFRESHED_EFFECT)) continue;
 
                 int currentEyeTicks = player.getAttachedOrElse(BLINK_TICKS, 0);
-                int currentDropperTicks = player.getAttachedOrElse(DROPPER_TICKS, 0);
 
-                if (currentDropperTicks == 0) {
-                    if (currentEyeTicks < MAX_BLINK_TICKS) {
-                        //Makes blinking required more often if you're on fire or in the nether
-                        int newValue = currentEyeTicks + ((player.isOnFire()) ? 3 : ((player.level().dimension() == Level.NETHER) ? 2 : 1));
-                        sendBlinkPacket(player, newValue);
-                    } else {
-                        if (server.getTickCount() % 20 != 0) return;
-                        DamageSource EyesDriedDamage = new DamageSource(
-                            server.registryAccess()
-                                .lookupOrThrow(Registries.DAMAGE_TYPE)
-                                .get(EyesDriedDamageSource.identifier()).get()
-                        );
-                        player.hurt(
-                            EyesDriedDamage,
-                    2.0f
-                        );
-                    }
+                if (currentEyeTicks < MAX_BLINK_TICKS) {
+                    //Makes blinking required more often if you're on fire or in the nether
+                    int newValue = currentEyeTicks + ((player.isOnFire()) ? 3 : ((player.level().dimension() == Level.NETHER) ? 2 : 1));
+                    sendBlinkPacket(player, newValue);
                 } else {
-                    currentDropperTicks--;
-                    player.setAttached(DROPPER_TICKS, currentDropperTicks);
-                    sendBlinkPacket(player, 0);
+                    if (server.getTickCount() % 20 != 0) return;
+                    DamageSource EyesDriedDamage = new DamageSource(
+                        server.registryAccess()
+                            .lookupOrThrow(Registries.DAMAGE_TYPE)
+                            .get(EyesDriedDamageSource.identifier()).get()
+                    );
+                    player.hurt(
+                        EyesDriedDamage,
+                2.0f
+                    );
                 }
             }
         });

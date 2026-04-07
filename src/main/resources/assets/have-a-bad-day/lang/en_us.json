@@ -1,7 +1,8 @@
 {
-  "key.category.have-a-bad-day.keybinds": "Have a Bad Day",
-  "key.have-a-bad-day.blink":  "Blink",
-  "key.have-a-bad-day.breath":  "Breath",
   "death.attack.eyes_dried": "%1$s forgot to blink",
-  "item.have-a-bad-day.eye_drops": "Eye Drops"
+  "effect.have-a-bad-day.refreshed": "Refreshed",
+  "item.have-a-bad-day.eye_drops": "Eye Drops",
+  "key.category.have-a-bad-day.keybinds": "Have a Bad Day",
+  "key.have-a-bad-day.blink": "Blink",
+  "key.have-a-bad-day.breath": "Breath"
 }
