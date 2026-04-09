@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_eye_drops": {
+      "conditions": {
+        "items": [
+          {
+            "items": "have-a-bad-day:eye_drops"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:eye_drops_dyed"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_eye_drops"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:eye_drops_dyed"
+    ]
+  }
+}

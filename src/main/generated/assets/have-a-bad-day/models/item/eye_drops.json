@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "have-a-bad-day:item/eye_drops"
+    "layer0": "have-a-bad-day:item/eye_drops",
+    "layer1": "have-a-bad-day:item/eye_drops_overlay"
   }
 }

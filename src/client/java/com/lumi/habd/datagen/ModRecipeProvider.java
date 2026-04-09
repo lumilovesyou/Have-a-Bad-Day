@@ -27,12 +27,16 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             public void buildRecipes() {
                 HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
                 shapeless(RecipeCategory.FOOD, EYE_DROPS)
-                        .requires(Items.IRON_NUGGET)
-                        .requires(Items.IRON_INGOT)
-                        .requires(Items.BLUE_DYE)
-                        .requires(Items.POTION)
+                    .requires(Items.IRON_NUGGET)
+                    .requires(Items.IRON_INGOT)
+                    .requires()
+                    .requires(Items.POTION)
                     .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
                     .save(output);
+                dyedItem(
+                        EYE_DROPS,
+                        "drops"
+                );
             }
         };
     }
