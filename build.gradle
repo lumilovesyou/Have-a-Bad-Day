@@ -11,7 +11,17 @@ base {
 }
 
 repositories {
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 loom {
@@ -34,6 +44,9 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    //compileOnly("maven.modrinth:female-gender:5.0.0-Beta.3+26.1")
+    implementation("maven.modrinth:female-gender:5.0.0-Beta.3+26.1")
+    localRuntime("maven.modrinth:modmenu:18.0.0-alpha.8")
 }
 
 processResources {

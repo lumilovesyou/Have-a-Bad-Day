@@ -7,6 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -29,14 +30,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 shapeless(RecipeCategory.FOOD, EYE_DROPS)
                     .requires(Items.IRON_NUGGET)
                     .requires(Items.IRON_INGOT)
-                    .requires()
+                    .requires(ItemTags.DYES)
                     .requires(Items.POTION)
                     .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
                     .save(output);
-                dyedItem(
-                        EYE_DROPS,
-                        "drops"
-                );
             }
         };
     }

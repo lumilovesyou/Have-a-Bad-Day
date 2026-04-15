@@ -37,5 +37,8 @@
     "minecraft": "~26.1",
     "java": ">=25",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "wildfire_gender": ">=5.0.0-Beta.3+26.1"
   }
 }

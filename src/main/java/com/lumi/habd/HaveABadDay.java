@@ -1,10 +1,13 @@
 package com.lumi.habd;
 
 import com.lumi.habd.effects.RefreshedEffect;
+import com.wildfire.api.WildfireAPI;
+import com.wildfire.main.config.enums.Gender;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -24,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import static com.lumi.habd.items.ItemRegistrar.*;
 import static com.lumi.habd.resources.BlinkingResources.*;
 import static com.lumi.habd.resources.BreathingResources.BreathRefreshPacket;
+import static com.lumi.habd.sounds.SoundRegistrar.*;
 
 import com.lumi.habd.resources.BlinkingResources.BlinkTickPacket;
 import com.lumi.habd.advancements.Criterion.ModCriteria;
@@ -31,12 +35,10 @@ import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
 
 public class HaveABadDay implements ModInitializer {
     ////To-do:
-    //Make eye drops take any dye (and be coloured appropriately)
-    //Add breathing sound effect
+    //Add eye dropper sound effect
     //Find a way to generate default resource packs
         //Add 16x16 pixel art for dropper resource pack
         //Add female alt breathings sounds resource pack
-            //Add support for female gender mod to add breathing sounds as appropriate
     //(Maybe) Add support for entity texture features blinking
     ////
 
@@ -52,6 +54,9 @@ public class HaveABadDay implements ModInitializer {
 	@Override
 	public void onInitialize() {
         LOGGER.info("Lumi says \"Have a bad day!\"");
+
+        //Sound registration
+        initSounds();
 
         //Item registration
         initItems();
@@ -96,6 +101,16 @@ public class HaveABadDay implements ModInitializer {
                 //Maybe custom advancement for breathing lava? ~~~~~~~~~~~~~~
             } else {
                 player.setAirSupply(player.getMaxAirSupply() - 1);
+                player.level().playSound(
+                    null,
+                    player.getX(),
+                    player.getY(),
+                    player.getZ(),
+                    genderIsFemale(player) ? FEMALE_BREATHE : MALE_BREATHE,
+                    player.getSoundSource(),
+                    1.0f,
+                    1.0f
+                );
             }
             ModCriteria.BREATHE.trigger(player);
         });
@@ -136,5 +151,14 @@ public class HaveABadDay implements ModInitializer {
             player.setAttached(BLINK_TICKS, value);
             ServerPlayNetworking.send(player, new BlinkTickPacket(value));
         }
+    }
+
+    //Test this works with and without wildfire gender installed!!
+    private Boolean genderIsFemale(ServerPlayer player) {
+        if (FabricLoader.getInstance().isModLoaded("wildfire_gender")) {
+            //Unfortunately no support for the "other" gender :{
+            return (WildfireAPI.getPlayerGender(player.getUUID()) == Gender.FEMALE);
+        }
+        return false;
     }
 }

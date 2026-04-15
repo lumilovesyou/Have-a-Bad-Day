@@ -12,19 +12,11 @@ public class ItemModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(net.minecraft.client.data.models.ItemModelGenerators itemModelGenerator) {
-        //Well now I need to figure out how to make it not use two textures...
-        /*
         itemModelGenerator.generateBooleanDispatch(
             EYE_DROPS,
             ItemModelUtils.isUsingItem(),
             ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(EYE_DROPS, "_using", ModelTemplates.FLAT_ITEM)),
             ItemModelUtils.plainModel(itemModelGenerator.createFlatItemModel(EYE_DROPS, ModelTemplates.FLAT_ITEM))
-        );
-         */
-
-        itemModelGenerator.generateItemWithTintedBaseLayer(
-                EYE_DROPS,
-                0x46429C
         );
     }
 
