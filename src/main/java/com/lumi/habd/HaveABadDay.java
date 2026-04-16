@@ -35,7 +35,6 @@ import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
 
 public class HaveABadDay implements ModInitializer {
     ////To-do:
-    //Add eye dropper sound effect
     //Find a way to generate default resource packs
         //Add 16x16 pixel art for dropper resource pack
         //Add female alt breathings sounds resource pack
@@ -49,7 +48,7 @@ public class HaveABadDay implements ModInitializer {
 
     //Effect registration
     public static final Holder<MobEffect> REFRESHED_EFFECT =
-            Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MODID, "refreshed"), new RefreshedEffect());
+        Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MODID, "refreshed"), new RefreshedEffect());
 
 	@Override
 	public void onInitialize() {
@@ -63,44 +62,48 @@ public class HaveABadDay implements ModInitializer {
 
         ////Packet sending registration
         PayloadTypeRegistry.clientboundPlay().register(
-                BlinkTickPacket.TYPE,
-                BlinkTickPacket.CODEC
+            BlinkTickPacket.TYPE,
+            BlinkTickPacket.CODEC
         );
 
         PayloadTypeRegistry.serverboundPlay().register(
-                BlinkRefreshPacket.TYPE,
-                BlinkRefreshPacket.CODEC
+            BlinkRefreshPacket.TYPE,
+            BlinkRefreshPacket.CODEC
         );
 
         PayloadTypeRegistry.serverboundPlay().register(
-                BreathRefreshPacket.TYPE,
-                BreathRefreshPacket.CODEC
+            BreathRefreshPacket.TYPE,
+            BreathRefreshPacket.CODEC
         );
         ////
 
         ////Packet receiving registration
-        //Remember to add sound effects for blinking + breathing ~~~~~~~~~~~~~~
         ServerPlayNetworking.registerGlobalReceiver(BlinkRefreshPacket.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             if (player.getAttachedOrElse(BLINK_TICKS, 0) > 0) {
                 player.setAttached(BLINK_TICKS, 0);
             }
-            ModCriteria.BLINK.trigger(player);
+            //ID one for blink advancement
+            ModCriteria.ID_TRIGGER.trigger(player, 1);
         });
 
         ServerPlayNetworking.registerGlobalReceiver(BreathRefreshPacket.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             if (player.isEyeInFluid(FluidTags.WATER) && !(player.level().getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).is(Blocks.BUBBLE_COLUMN) || player.hasEffect(MobEffects.WATER_BREATHING))) {
+                //Make player drown faster if they try to breath in water
                 player.setAirSupply(player.getAirSupply() - (player.getMaxAirSupply() / 5));
             } else if (((player.isEyeInFluid(FluidTags.LAVA) || player.isOnFire())) && !player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                //Same as breathing underwater but damages them too
                 player.setAirSupply(player.getAirSupply() - (player.getMaxAirSupply() / 5));
                 player.hurt(
                     player.damageSources().onFire(),
                     4.0f
                 );
-                //Maybe custom advancement for breathing lava? ~~~~~~~~~~~~~~
+                //ID three for breathing fire
+                ModCriteria.ID_TRIGGER.trigger(player, 3);
             } else {
                 player.setAirSupply(player.getMaxAirSupply() - 1);
+                //Play breathing sound
                 player.level().playSound(
                     null,
                     player.getX(),
@@ -112,7 +115,8 @@ public class HaveABadDay implements ModInitializer {
                     1.0f
                 );
             }
-            ModCriteria.BREATHE.trigger(player);
+            //ID two for breathe
+            ModCriteria.ID_TRIGGER.trigger(player, 2);
         });
         ////
 
@@ -122,14 +126,22 @@ public class HaveABadDay implements ModInitializer {
 
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 //Skip if creative
-                if (player.gameMode.isCreative() || player.hasEffect(REFRESHED_EFFECT)) continue;
+                if (player.gameMode.isCreative()) continue;
 
                 int currentEyeTicks = player.getAttachedOrElse(BLINK_TICKS, 0);
+
+                //Fixes bug where taking eye drops sometimes keeps eyes strained effect on screen
+                if (player.hasEffect(REFRESHED_EFFECT)) {
+                    if (currentEyeTicks != 0) {
+                        sendBlinkTickPacket(player, 0);
+                    }
+                    continue;
+                }
 
                 if (currentEyeTicks < MAX_BLINK_TICKS) {
                     //Makes blinking required more often if you're on fire or in the nether
                     int newValue = currentEyeTicks + ((player.isOnFire()) ? 3 : ((player.level().dimension() == Level.NETHER) ? 2 : 1));
-                    sendBlinkPacket(player, newValue);
+                    sendBlinkTickPacket(player, newValue);
                 } else {
                     if (server.getTickCount() % 20 != 0) return;
                     DamageSource EyesDriedDamage = new DamageSource(
@@ -146,14 +158,14 @@ public class HaveABadDay implements ModInitializer {
         });
     }
 
-    private void sendBlinkPacket(ServerPlayer player, int value) {
+    private void sendBlinkTickPacket(ServerPlayer player, int value) {
         if (player.getAttachedOrElse(BLINK_TICKS, 0) != value) {
             player.setAttached(BLINK_TICKS, value);
             ServerPlayNetworking.send(player, new BlinkTickPacket(value));
         }
     }
 
-    //Test this works with and without wildfire gender installed!!
+    //Wildfire support
     private Boolean genderIsFemale(ServerPlayer player) {
         if (FabricLoader.getInstance().isModLoaded("wildfire_gender")) {
             //Unfortunately no support for the "other" gender :{

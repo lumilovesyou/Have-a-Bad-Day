@@ -3,12 +3,12 @@
   "id": "have-a-bad-day",
   "version": "${version}",
   "name": "Have a Bad Day",
-  "description": "Makes the game all around worse to play",
+  "description": "A mod with the sole purpose of making playing the game unbearable.",
   "authors": [
     "LumiLovesYou"
   ],
   "contact": {
-    "homepage": "https://fillme.in/ ~~~~~~~~~~~~~~",
+    "homepage": "https://modrinth.com/project/have-a-bad-day",
     "sources": "https://github.com/lumilovesyou/Have-a-Bad-Day"
   },
   "license": "ISC",

@@ -1,12 +1,16 @@
 {
   "parent": "have-a-bad-day:have_a_bad_day",
   "criteria": {
-    "blink": {
-      "trigger": "have-a-bad-day:blink"
+    "id_trigger": {
+      "conditions": {
+        "advancementID": 1
+      },
+      "trigger": "have-a-bad-day:id_trigger"
     }
   },
   "display": {
     "description": "Blink for the first time",
+    "hidden": true,
     "icon": {
       "id": "minecraft:ender_pearl"
     },
@@ -14,7 +18,7 @@
   },
   "requirements": [
     [
-      "blink"
+      "id_trigger"
     ]
   ],
   "sends_telemetry_event": true

@@ -18,8 +18,6 @@ import static com.lumi.habd.resources.BlinkingResources.BLINK_TICKS;
 
 @Mixin(Gui.class)
 public abstract class CameraOverlaysMixin {
-    //To-do: replace current texture with a one like the freezing texture but with blood vessels instead ~~~~~~~~~~~~~~
-
     @Shadow
     abstract void extractTextureOverlay(final GuiGraphicsExtractor graphics, final Identifier texture, final float alpha);
 

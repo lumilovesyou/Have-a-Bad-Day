@@ -1,5 +1,8 @@
 package com.lumi.habd.items;
 
+import com.lumi.habd.advancements.Criterion.ModCriteria;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,8 +12,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import static com.lumi.habd.HaveABadDay.REFRESHED_EFFECT;
-import static com.lumi.habd.resources.BlinkingResources.BLINK_TICKS;
-import static com.lumi.habd.sounds.SoundRegistrar.FEMALE_BREATHE;
 
 public class DropperItem extends Item {
     public DropperItem(Properties properties) {
@@ -19,11 +20,13 @@ public class DropperItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        //Add sound effect! ~~~~~~~~~~~~~~
         if (player.getXRot() < -70) {
             player.startUsingItem(hand);
         } else {
-            //Trigger advancement to inform the player to look upwards
+            if (player instanceof ServerPlayer serverPlayer) {
+                //ID four for eye drops
+                ModCriteria.ID_TRIGGER.trigger(serverPlayer, 4);
+            }
         }
         return InteractionResult.CONSUME;
     }
@@ -35,8 +38,18 @@ public class DropperItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-        entity.setAttached(BLINK_TICKS, 0);
         entity.addEffect(new MobEffectInstance(REFRESHED_EFFECT, 3600, 0, false, true, true));
+        //Play drip sound
+        entity.level().playSound(
+                null,
+                entity.getX(),
+                entity.getY(),
+                entity.getZ(),
+                SoundEvents.POINTED_DRIPSTONE_DRIP_WATER_INTO_CAULDRON,
+                entity.getSoundSource(),
+                1.0f,
+                1.0f
+        );
         return stack.hurtAndConvertOnBreak(1, Items.GLASS_BOTTLE, entity, entity.getUsedItemHand().asEquipmentSlot());
     }
 

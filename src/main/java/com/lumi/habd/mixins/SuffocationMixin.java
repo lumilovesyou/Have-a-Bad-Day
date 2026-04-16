@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LivingEntity.class)
 public class SuffocationMixin {
-    //Stop oxygen from filling on it's own in a bubble column
+    //Stops oxygen from filling on its own in a bubble column
     @Redirect(
         method = "baseTick()V",
         at = @At(

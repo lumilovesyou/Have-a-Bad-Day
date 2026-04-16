@@ -1,6 +1,5 @@
 package com.lumi.habd.resources;
 
-import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;

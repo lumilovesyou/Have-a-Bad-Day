@@ -3,18 +3,18 @@
   "criteria": {
     "id_trigger": {
       "conditions": {
-        "advancementID": 2
+        "advancementID": 4
       },
       "trigger": "have-a-bad-day:id_trigger"
     }
   },
   "display": {
-    "description": "Breathe for the first time",
+    "description": "Try to use eye drops while not looking up",
     "hidden": true,
     "icon": {
-      "id": "minecraft:wind_charge"
+      "id": "have-a-bad-day:eye_drops"
     },
-    "title": "Feel relaxed?"
+    "title": "It says gullible on the ceiling!"
   },
   "requirements": [
     [

@@ -1,7 +1,10 @@
 {
   "criteria": {
-    "blink": {
-      "trigger": "have-a-bad-day:blink"
+    "id_trigger": {
+      "conditions": {
+        "advancementID": 0
+      },
+      "trigger": "have-a-bad-day:id_trigger"
     }
   },
   "display": {
@@ -15,7 +18,7 @@
   },
   "requirements": [
     [
-      "blink"
+      "id_trigger"
     ]
   ],
   "sends_telemetry_event": true

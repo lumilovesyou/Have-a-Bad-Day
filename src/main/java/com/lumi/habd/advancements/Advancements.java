@@ -1,7 +1,6 @@
 package com.lumi.habd.advancements;
 
-import com.lumi.habd.advancements.Criterion.BlinkAdvancementCriteria;
-import com.lumi.habd.advancements.Criterion.BreatheAdvancementCriteria;
+import com.lumi.habd.advancements.Criterion.IDAdvancementCriteria;
 import com.lumi.habd.advancements.Criterion.ModCriteria;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
@@ -18,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static com.lumi.habd.HaveABadDay.MODID;
+import static com.lumi.habd.items.ItemRegistrar.EYE_DROPS;
 
 public class Advancements extends FabricAdvancementProvider {
     public Advancements(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
@@ -38,7 +38,7 @@ public class Advancements extends FabricAdvancementProvider {
                 false,
                 false
             )
-            .addCriterion("blink", ModCriteria.BLINK.createCriterion(new BlinkAdvancementCriteria.Conditions(Optional.empty())))
+            .addCriterion("id_trigger", ModCriteria.ID_TRIGGER.createCriterion(new IDAdvancementCriteria.Conditions(Optional.empty(), 0)))
             .save(consumer, String.format("%s:have_a_bad_day", MODID));
 
         //Blinking advancement
@@ -51,10 +51,10 @@ public class Advancements extends FabricAdvancementProvider {
                 AdvancementType.TASK,
                 true,
                 true,
-                false
+                true
             )
             .parent(PARENT)
-            .addCriterion("blink", ModCriteria.BLINK.createCriterion(new BlinkAdvancementCriteria.Conditions(Optional.empty())))
+            .addCriterion("id_trigger", ModCriteria.ID_TRIGGER.createCriterion(new IDAdvancementCriteria.Conditions(Optional.empty(), 1)))
             .save(consumer, String.format("%s:blink", MODID));
 
         //Breathing advancement
@@ -67,10 +67,42 @@ public class Advancements extends FabricAdvancementProvider {
                 AdvancementType.TASK,
                 true,
                 true,
-                false
+                true
             )
             .parent(PARENT)
-            .addCriterion("breathe", ModCriteria.BREATHE.createCriterion(new BreatheAdvancementCriteria.Conditions(Optional.empty())))
+            .addCriterion("id_trigger", ModCriteria.ID_TRIGGER.createCriterion(new IDAdvancementCriteria.Conditions(Optional.empty(), 2)))
             .save(consumer, String.format("%s:breathe", MODID));
+
+        //Breathing fire advancement
+        AdvancementHolder BREATH_FIRE = Advancement.Builder.advancement()
+            .display(
+                Items.FIRE_CHARGE,
+                Component.literal("Fire breather"),
+                Component.literal("Try breathing in lava or when on fire"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                true
+            )
+            .parent(BREATH)
+            .addCriterion("id_trigger", ModCriteria.ID_TRIGGER.createCriterion(new IDAdvancementCriteria.Conditions(Optional.empty(), 3)))
+            .save(consumer, String.format("%s:breathe_fire", MODID));
+
+        //Eye dropper advancement
+        AdvancementHolder USE_EYE_DROPPER = Advancement.Builder.advancement()
+            .display(
+                EYE_DROPS,
+                Component.literal("It says gullible on the ceiling!"),
+                Component.literal("Try to use eye drops while not looking up"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                true
+            )
+            .parent(PARENT)
+            .addCriterion("id_trigger", ModCriteria.ID_TRIGGER.createCriterion(new IDAdvancementCriteria.Conditions(Optional.empty(), 4)))
+            .save(consumer, String.format("%s:use_eye_dropper", MODID));
     }
 }

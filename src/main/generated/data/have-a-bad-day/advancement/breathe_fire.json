@@ -1,20 +1,20 @@
 {
-  "parent": "have-a-bad-day:have_a_bad_day",
+  "parent": "have-a-bad-day:breathe",
   "criteria": {
     "id_trigger": {
       "conditions": {
-        "advancementID": 2
+        "advancementID": 3
       },
       "trigger": "have-a-bad-day:id_trigger"
     }
   },
   "display": {
-    "description": "Breathe for the first time",
+    "description": "Try breathing in lava or when on fire",
     "hidden": true,
     "icon": {
-      "id": "minecraft:wind_charge"
+      "id": "minecraft:fire_charge"
     },
-    "title": "Feel relaxed?"
+    "title": "Fire breather"
   },
   "requirements": [
     [
