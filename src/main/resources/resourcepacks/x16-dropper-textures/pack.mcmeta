@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "Replaces the default dropper texture with an x16 sized alternative",
+    "min_format": 84,
+    "max_format": 84
+  }
+}

@@ -11,7 +11,6 @@ import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import static com.lumi.habd.HaveABadDay.MODID;
-import static com.lumi.habd.HaveABadDay.MAX_BLINK_TICKS;
 import static com.lumi.habd.resources.BlinkingResources.BLINK_TICKS;
 import static com.lumi.habd.resources.BreathingResources.BreathRefreshPacket;
 import com.lumi.habd.resources.BlinkingResources.BlinkTickPacket;

@@ -1,18 +1,24 @@
 package com.lumi.habd;
 
+import com.lumi.habd.advancements.Criterion.ModCriteria;
 import com.lumi.habd.effects.RefreshedEffect;
+import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
+import com.lumi.habd.resources.BlinkingResources.BlinkTickPacket;
 import com.wildfire.api.WildfireAPI;
 import com.wildfire.main.config.enums.Gender;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
+import net.fabricmc.fabric.impl.resource.ResourceLoaderImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
@@ -24,23 +30,13 @@ import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.lumi.habd.items.ItemRegistrar.*;
-import static com.lumi.habd.resources.BlinkingResources.*;
+import static com.lumi.habd.items.ItemRegistrar.initItems;
+import static com.lumi.habd.resources.BlinkingResources.BLINK_TICKS;
+import static com.lumi.habd.resources.BlinkingResources.EyesDriedDamageSource;
 import static com.lumi.habd.resources.BreathingResources.BreathRefreshPacket;
 import static com.lumi.habd.sounds.SoundRegistrar.*;
 
-import com.lumi.habd.resources.BlinkingResources.BlinkTickPacket;
-import com.lumi.habd.advancements.Criterion.ModCriteria;
-import com.lumi.habd.resources.BlinkingResources.BlinkRefreshPacket;
-
 public class HaveABadDay implements ModInitializer {
-    ////To-do:
-    //Find a way to generate default resource packs
-        //Add 16x16 pixel art for dropper resource pack
-        //Add female alt breathings sounds resource pack
-    //(Maybe) Add support for entity texture features blinking
-    ////
-
 	public static final String MODID = "have-a-bad-day";
     public static int MAX_BLINK_TICKS = 60;
 
@@ -156,6 +152,21 @@ public class HaveABadDay implements ModInitializer {
                 }
             }
         });
+
+        //Add resource packs
+        registerResourcePack("female-breathing-sounds", "Female Breathing Sounds"); //Support for female breathing sounds without wildfire
+        registerResourcePack("x16-dropper-textures", "x16 Dropper Textures"); //I'm not good at art but at least I tried
+    }
+
+    private void registerResourcePack(String id, String name) {
+        Identifier resource = Identifier.fromNamespaceAndPath(MODID, id);
+        ResourceLoaderImpl.registerBuiltinPack(
+                resource,
+                String.format("resourcepacks/%s", resource.getPath()),
+                FabricLoader.getInstance().getModContainer(MODID).orElseThrow(),
+                Component.literal(name),
+                PackActivationType.NORMAL
+        );
     }
 
     private void sendBlinkTickPacket(ServerPlayer player, int value) {

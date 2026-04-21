@@ -1,0 +1,7 @@
+{
+  "male_breathe": {
+    "replace": true,
+    "subtitle": "sound.have-a-bad-day.female_breathe",
+    "sounds": ["have-a-bad-day:female_breathing_1", "have-a-bad-day:female_breathing_2", "have-a-bad-day:female_breathing_3", "have-a-bad-day:female_breathing_4"]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "Replaces the default breathing sounds with female alternatives",
+    "min_format": 84,
+    "max_format": 84
+  }
+}
