@@ -6,5 +6,7 @@
   "key.have-a-bad-day.blink": "Blink",
   "key.have-a-bad-day.breath": "Breath",
   "sound.have-a-bad-day.male_breathe": "Player breathes",
-  "sound.have-a-bad-day.female_breathe": "Player breathes"
+  "sound.have-a-bad-day.female_breathe": "Player breathes",
+  "gamerule.have-a-bad-day.require_blinking": "Require Blinking",
+  "gamerule.have-a-bad-day.require_breathing": "Require Breathing"
 }

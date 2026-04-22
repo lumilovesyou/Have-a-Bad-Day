@@ -8,6 +8,7 @@ import com.wildfire.api.WildfireAPI;
 import com.wildfire.main.config.enums.Gender;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
@@ -27,6 +28,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRuleCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +48,16 @@ public class HaveABadDay implements ModInitializer {
     //Effect registration
     public static final Holder<MobEffect> REFRESHED_EFFECT =
         Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MODID, "refreshed"), new RefreshedEffect());
+
+    //Game rules
+    public static final GameRule<Boolean> REQUIRE_BREATHING = GameRuleBuilder
+            .forBoolean(true)
+            .category(GameRuleCategory.PLAYER)
+            .buildAndRegister(Identifier.fromNamespaceAndPath(MODID, "require_breathing"));
+    public static final GameRule<Boolean> REQUIRE_BLINKING = GameRuleBuilder
+            .forBoolean(true)
+            .category(GameRuleCategory.PLAYER)
+            .buildAndRegister(Identifier.fromNamespaceAndPath(MODID, "require_blinking"));
 
 	@Override
 	public void onInitialize() {
@@ -84,6 +97,9 @@ public class HaveABadDay implements ModInitializer {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(BreathRefreshPacket.TYPE, (payload, context) -> {
+            //Skip if gamerule
+            if (!context.server().getGameRules().get(REQUIRE_BREATHING)) return;
+
             ServerPlayer player = context.player();
             if (player.isEyeInFluid(FluidTags.WATER) && !(player.level().getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ())).is(Blocks.BUBBLE_COLUMN) || player.hasEffect(MobEffects.WATER_BREATHING))) {
                 //Make player drown faster if they try to breath in water
@@ -127,7 +143,7 @@ public class HaveABadDay implements ModInitializer {
                 int currentEyeTicks = player.getAttachedOrElse(BLINK_TICKS, 0);
 
                 //Fixes bug where taking eye drops sometimes keeps eyes strained effect on screen
-                if (player.hasEffect(REFRESHED_EFFECT)) {
+                if (player.hasEffect(REFRESHED_EFFECT) || !server.getGameRules().get(REQUIRE_BLINKING)) {
                     if (currentEyeTicks != 0) {
                         sendBlinkTickPacket(player, 0);
                     }
