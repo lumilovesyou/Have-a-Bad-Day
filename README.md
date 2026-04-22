@@ -1,6 +1,6 @@
 <div align="center"><center>
 
-<img alt="An eye against a blue background with bubbles floating upwards behind it" src="https://raw.githubusercontent.com/lumilovesyou/Have-a-Bad-Day/refs/heads/main/src/main/Images/icon-small.png">
+<img alt="An eye against a blue background with bubbles floating upwards behind it" src="https://raw.githubusercontent.com/lumilovesyou/Have-a-Bad-Day/refs/heads/main/Images/icon-small.png">
 
 # Have a Bad Day
 
